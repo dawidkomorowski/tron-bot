@@ -41,10 +41,10 @@ namespace TronBotFramework
 
         private void ValidateCoordinates(int x, int y)
         {
-            var maxWidth = Width - 1;
-            var maxHeight = Height - 1;
-            if (x < 0 || x > maxWidth) throw new ArgumentOutOfRangeException(nameof(x), x, $"X must be in range (0, {maxWidth}).");
-            if (y < 0 || y > maxHeight) throw new ArgumentOutOfRangeException(nameof(y), y, $"Y must be in range (0, {maxHeight}).");
+            var xMax = Width - 1;
+            var yMax = Height - 1;
+            if (x < 0 || x > xMax) throw new ArgumentOutOfRangeException(nameof(x), x, $"X must be in range (0, {xMax}).");
+            if (y < 0 || y > yMax) throw new ArgumentOutOfRangeException(nameof(y), y, $"Y must be in range (0, {yMax}).");
         }
 
         public IEnumerator<TronBoardField> GetEnumerator()
