@@ -1,18 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TronBotFramework
 {
-    public enum TronBoardField
-    {
-        Empty,
-        Obstacle,
-        BlueTail,
-        BlueHead,
-        RedTail,
-        RedHead
-    }
-
-    public sealed class TronBoard
+    public sealed class TronBoard : IEnumerable<TronBoardField>
     {
         private readonly TronBoardField[] _board;
 
@@ -52,6 +45,16 @@ namespace TronBotFramework
             var maxHeight = Height - 1;
             if (x < 0 || x > maxWidth) throw new ArgumentOutOfRangeException(nameof(x), x, $"X must be in range (0, {maxWidth}).");
             if (y < 0 || y > maxHeight) throw new ArgumentOutOfRangeException(nameof(y), y, $"Y must be in range (0, {maxHeight}).");
+        }
+
+        public IEnumerator<TronBoardField> GetEnumerator()
+        {
+            return _board.AsEnumerable().GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
