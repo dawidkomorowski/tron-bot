@@ -1,6 +1,6 @@
 ﻿namespace TronBotFramework
 {
-    public enum TronBoardField
+    public enum Field
     {
         Empty,
         Obstacle,

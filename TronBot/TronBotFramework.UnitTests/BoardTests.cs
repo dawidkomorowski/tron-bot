@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace TronBotFramework.UnitTests
 {
-    public class TronBoardTests
+    public class BoardTests
     {
         [TestCase(0, 1)]
         [TestCase(-1, 1)]
@@ -15,19 +15,19 @@ namespace TronBotFramework.UnitTests
             // Arrange
             // Act
             // Assert
-            Assert.That(() => new TronBoard(width, height), Throws.ArgumentException);
+            Assert.That(() => new Board(width, height), Throws.ArgumentException);
         }
 
         [Test]
-        public void Constructor_ShouldCreateTronBoardOfSpecifiedSize()
+        public void Constructor_ShouldCreateBoardOfSpecifiedSize()
         {
             // Arrange
             // Act
-            var tronBoard = new TronBoard(10, 20);
+            var board = new Board(10, 20);
 
             // Assert
-            Assert.That(tronBoard.Width, Is.EqualTo(10));
-            Assert.That(tronBoard.Height, Is.EqualTo(20));
+            Assert.That(board.Width, Is.EqualTo(10));
+            Assert.That(board.Height, Is.EqualTo(20));
         }
 
         [Test]
@@ -35,15 +35,15 @@ namespace TronBotFramework.UnitTests
         {
             // Arrange
             // Act
-            var tronBoard = new TronBoard(10, 20);
+            var board = new Board(10, 20);
 
             // Assert
             for (var x = 0; x < 10; x++)
             {
                 for (var y = 0; y < 20; y++)
                 {
-                    var field = tronBoard.GetField(x, y);
-                    Assert.That(field, Is.EqualTo(TronBoardField.Empty));
+                    var field = board.GetField(x, y);
+                    Assert.That(field, Is.EqualTo(Field.Empty));
                 }
             }
         }
@@ -55,11 +55,11 @@ namespace TronBotFramework.UnitTests
         public void GetField_ShouldThrowException_GivenCoordinatesOutOfRange(int x, int y)
         {
             // Arrange
-            var tronBoard = new TronBoard(10, 20);
+            var board = new Board(10, 20);
 
             // Act
             // Assert
-            Assert.That(() => tronBoard.GetField(x, y), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => board.GetField(x, y), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [TestCase(-1, 0)]
@@ -69,18 +69,18 @@ namespace TronBotFramework.UnitTests
         public void SetField_ShouldThrowException_GivenCoordinatesOutOfRange(int x, int y)
         {
             // Arrange
-            var tronBoard = new TronBoard(10, 20);
+            var board = new Board(10, 20);
 
             // Act
             // Assert
-            Assert.That(() => tronBoard.SetField(x, y, TronBoardField.Empty), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => board.SetField(x, y, Field.Empty), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
         public void GetField_ShouldReturnFieldThatWasSetWith_SetField()
         {
             // Arrange
-            var tronBoard = new TronBoard(10, 20);
+            var board = new Board(10, 20);
 
             for (var x = 0; x < 10; x++)
             {
@@ -88,10 +88,10 @@ namespace TronBotFramework.UnitTests
                 {
                     // Act
                     var expectedField = GetRandomField();
-                    tronBoard.SetField(x, y, expectedField);
+                    board.SetField(x, y, expectedField);
 
                     // Assert
-                    var field = tronBoard.GetField(x, y);
+                    var field = board.GetField(x, y);
                     Assert.That(field, Is.EqualTo(expectedField));
                 }
             }
@@ -101,30 +101,30 @@ namespace TronBotFramework.UnitTests
         public void GetEnumerator_ShouldReturnEnumeratorThatEnumeratesAllFields()
         {
             // Arrange
-            var tronBoard = new TronBoard(10, 20);
+            var board = new Board(10, 20);
 
             // One blue head
             const int expectedBlueHead = 1;
-            tronBoard.SetField(0, 0, TronBoardField.BlueHead);
+            board.SetField(0, 0, Field.BlueHead);
             // One red head
             const int expectedRedHead = 1;
-            tronBoard.SetField(9, 19, TronBoardField.RedHead);
+            board.SetField(9, 19, Field.RedHead);
             // Three blue tails
             const int expectedBlueTails = 3;
-            tronBoard.SetField(1, 0, TronBoardField.BlueTail);
-            tronBoard.SetField(1, 1, TronBoardField.BlueTail);
-            tronBoard.SetField(1, 2, TronBoardField.BlueTail);
+            board.SetField(1, 0, Field.BlueTail);
+            board.SetField(1, 1, Field.BlueTail);
+            board.SetField(1, 2, Field.BlueTail);
             // Five red tails
             const int expectedRedTails = 5;
-            tronBoard.SetField(2, 0, TronBoardField.RedTail);
-            tronBoard.SetField(2, 1, TronBoardField.RedTail);
-            tronBoard.SetField(2, 2, TronBoardField.RedTail);
-            tronBoard.SetField(2, 3, TronBoardField.RedTail);
-            tronBoard.SetField(2, 4, TronBoardField.RedTail);
+            board.SetField(2, 0, Field.RedTail);
+            board.SetField(2, 1, Field.RedTail);
+            board.SetField(2, 2, Field.RedTail);
+            board.SetField(2, 3, Field.RedTail);
+            board.SetField(2, 4, Field.RedTail);
             // Two obstacles
             const int expectedObstacles = 2;
-            tronBoard.SetField(3, 8, TronBoardField.Obstacle);
-            tronBoard.SetField(3, 9, TronBoardField.Obstacle);
+            board.SetField(3, 8, Field.Obstacle);
+            board.SetField(3, 9, Field.Obstacle);
             // Rest is empty
             const int expectedEmpty = 10 * 20 - expectedBlueHead - expectedRedHead - expectedBlueTails - expectedRedTails - expectedObstacles;
 
@@ -135,26 +135,26 @@ namespace TronBotFramework.UnitTests
             var actualRedTails = 0;
             var actualObstacles = 0;
             var actualEmpty = 0;
-            foreach (var field in tronBoard)
+            foreach (var field in board)
             {
                 switch (field)
                 {
-                    case TronBoardField.Empty:
+                    case Field.Empty:
                         actualEmpty++;
                         break;
-                    case TronBoardField.Obstacle:
+                    case Field.Obstacle:
                         actualObstacles++;
                         break;
-                    case TronBoardField.BlueTail:
+                    case Field.BlueTail:
                         actualBlueTails++;
                         break;
-                    case TronBoardField.BlueHead:
+                    case Field.BlueHead:
                         actualBlueHead++;
                         break;
-                    case TronBoardField.RedTail:
+                    case Field.RedTail:
                         actualRedTails++;
                         break;
-                    case TronBoardField.RedHead:
+                    case Field.RedHead:
                         actualRedHead++;
                         break;
                     default:
@@ -163,7 +163,7 @@ namespace TronBotFramework.UnitTests
             }
 
             // Assert
-            Assert.That(tronBoard.Count(), Is.EqualTo(10 * 20));
+            Assert.That(board.Count(), Is.EqualTo(10 * 20));
             Assert.That(actualBlueHead, Is.EqualTo(expectedBlueHead));
             Assert.That(actualRedHead, Is.EqualTo(expectedRedHead));
             Assert.That(actualBlueTails, Is.EqualTo(expectedBlueTails));
@@ -172,9 +172,9 @@ namespace TronBotFramework.UnitTests
             Assert.That(actualEmpty, Is.EqualTo(expectedEmpty));
         }
 
-        private static TronBoardField GetRandomField()
+        private static Field GetRandomField()
         {
-            return TestContext.CurrentContext.Random.NextEnum<TronBoardField>();
+            return TestContext.CurrentContext.Random.NextEnum<Field>();
         }
     }
 }

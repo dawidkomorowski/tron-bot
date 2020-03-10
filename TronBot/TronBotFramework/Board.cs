@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace TronBotFramework
 {
-    public sealed class TronBoard : IEnumerable<TronBoardField>
+    public sealed class Board : IEnumerable<Field>
     {
-        private readonly TronBoardField[] _board;
+        private readonly Field[] _board;
 
-        public TronBoard(int width, int height)
+        public Board(int width, int height)
         {
             if (width <= 0) throw new ArgumentException("Width must be positive.", nameof(width));
             if (height <= 0) throw new ArgumentException("Height must be positive.", nameof(height));
@@ -17,23 +17,23 @@ namespace TronBotFramework
             Width = width;
             Height = height;
 
-            _board = new TronBoardField[width * height];
+            _board = new Field[width * height];
             for (var i = 0; i < _board.Length; i++)
             {
-                _board[i] = TronBoardField.Empty;
+                _board[i] = Field.Empty;
             }
         }
 
         public int Width { get; }
         public int Height { get; }
 
-        public TronBoardField GetField(int x, int y)
+        public Field GetField(int x, int y)
         {
             ValidateCoordinates(x, y);
             return _board[y * Width + x];
         }
 
-        public void SetField(int x, int y, TronBoardField field)
+        public void SetField(int x, int y, Field field)
         {
             ValidateCoordinates(x, y);
             _board[y * Width + x] = field;
@@ -47,7 +47,7 @@ namespace TronBotFramework
             if (y < 0 || y > yMax) throw new ArgumentOutOfRangeException(nameof(y), y, $"Y must be in range (0, {yMax}).");
         }
 
-        public IEnumerator<TronBoardField> GetEnumerator()
+        public IEnumerator<Field> GetEnumerator()
         {
             return _board.AsEnumerable().GetEnumerator();
         }
