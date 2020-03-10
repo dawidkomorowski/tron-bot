@@ -54,7 +54,37 @@ namespace TronBotFramework.UnitTests
             Assert.That(() => new Competition(board), Throws.ArgumentException);
         }
 
-        private static Board GetValidBoard()
+        [TestCase(1, 1)]
+        [TestCase(5, 10)]
+        public void BluePosition_ShouldReturnCorrectValueAfterConstruction(int blueX, int blueY)
+        {
+            // Arrange
+            var board = GetValidBoard(bluePosition: (blueX, blueY));
+            var competition = new Competition(board);
+
+            // Act
+            var bluePosition = competition.BluePosition;
+
+            // Assert
+            Assert.That(bluePosition, Is.EqualTo((blueX, blueY)));
+        }
+
+        [TestCase(8, 8)]
+        [TestCase(5, 10)]
+        public void RedPosition_ShouldReturnCorrectValueAfterConstruction(int redX, int redY)
+        {
+            // Arrange
+            var board = GetValidBoard(redPosition: (redX, redY));
+            var competition = new Competition(board);
+
+            // Act
+            var redPosition = competition.RedPosition;
+
+            // Assert
+            Assert.That(redPosition, Is.EqualTo((redX, redY)));
+        }
+
+        private static Board GetValidBoard((int X, int Y)? bluePosition = null, (int X, int Y)? redPosition = null)
         {
             var board = new Board(10, 20);
 
@@ -66,8 +96,8 @@ namespace TronBotFramework.UnitTests
                 }
             }
 
-            board.SetField(1, 1, Field.BlueHead);
-            board.SetField(8, 8, Field.RedHead);
+            board.SetField(bluePosition?.X ?? 1, bluePosition?.Y ?? 1, Field.BlueHead);
+            board.SetField(redPosition?.X ?? 8, redPosition?.Y ?? 8, Field.RedHead);
 
             return board;
         }

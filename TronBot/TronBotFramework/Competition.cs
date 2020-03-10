@@ -12,6 +12,14 @@ namespace TronBotFramework
             _board = board;
         }
 
+        public (int, int) BluePosition => GetPositionOfHead(Color.Blue);
+        public (int, int) RedPosition => GetPositionOfHead(Color.Red);
+
+        public Move[] GetAvailableMoves(Color color)
+        {
+            return new Move[0];
+        }
+
         private static void ValidateBoard(Board board)
         {
             var blueHeadCount = 0;
@@ -70,6 +78,21 @@ namespace TronBotFramework
                 if (rightBorderField != Field.Obstacle)
                     throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: ({xMax}, {y}).", nameof(board));
             }
+        }
+
+        private (int, int) GetPositionOfHead(Color color)
+        {
+            for (var x = 0; x < _board.Width; x++)
+            {
+                for (var y = 0; y < _board.Height; y++)
+                {
+                    var field = _board.GetField(x, y);
+                    if (color == Color.Blue && field == Field.BlueHead
+                        || color == Color.Red && field == Field.RedHead) return (x, y);
+                }
+            }
+
+            throw new InvalidOperationException("Head position not found.");
         }
     }
 }
