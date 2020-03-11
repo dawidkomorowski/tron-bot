@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TronBotFramework
 {
@@ -12,12 +13,19 @@ namespace TronBotFramework
             _board = board;
         }
 
-        public (int, int) BluePosition => GetPositionOfHead(Color.Blue);
-        public (int, int) RedPosition => GetPositionOfHead(Color.Red);
+        public (int X, int Y) BluePosition => GetPositionOfHead(Color.Blue);
+        public (int X, int Y) RedPosition => GetPositionOfHead(Color.Red);
 
-        public Move[] GetAvailableMoves(Color color)
+        public IReadOnlyCollection<Move> GetAvailableMoves(Color color)
         {
-            return new Move[0];
+            var moves = new List<Move>();
+
+            if (GetFieldBasedOnMove(color, Move.Up) == Field.Empty) moves.Add(Move.Up);
+            if (GetFieldBasedOnMove(color, Move.Down) == Field.Empty) moves.Add(Move.Down);
+            if (GetFieldBasedOnMove(color, Move.Left) == Field.Empty) moves.Add(Move.Left);
+            if (GetFieldBasedOnMove(color, Move.Right) == Field.Empty) moves.Add(Move.Right);
+
+            return moves.AsReadOnly();
         }
 
         private static void ValidateBoard(Board board)
@@ -80,7 +88,7 @@ namespace TronBotFramework
             }
         }
 
-        private (int, int) GetPositionOfHead(Color color)
+        private (int X, int Y) GetPositionOfHead(Color color)
         {
             for (var x = 0; x < _board.Width; x++)
             {
@@ -93,6 +101,19 @@ namespace TronBotFramework
             }
 
             throw new InvalidOperationException("Head position not found.");
+        }
+
+        private Field GetFieldBasedOnMove(Color color, Move move)
+        {
+            var (x, y) = GetPositionOfHead(color);
+            return move switch
+            {
+                Move.Up => _board.GetField(x, y - 1),
+                Move.Down => _board.GetField(x, y + 1),
+                Move.Left => _board.GetField(x - 1, y),
+                Move.Right => _board.GetField(x + 1, y),
+                _ => throw new ArgumentOutOfRangeException(nameof(move), move, "Incorrect move provided.")
+            };
         }
     }
 }

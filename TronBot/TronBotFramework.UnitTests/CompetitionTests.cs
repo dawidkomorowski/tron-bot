@@ -4,6 +4,8 @@ namespace TronBotFramework.UnitTests
 {
     public class CompetitionTests
     {
+        #region Constructor tests
+
         [Test]
         public void Constructor_ShouldNotThrow_GivenValidBoard()
         {
@@ -54,6 +56,8 @@ namespace TronBotFramework.UnitTests
             Assert.That(() => new Competition(board), Throws.ArgumentException);
         }
 
+        #endregion
+
         [TestCase(1, 1)]
         [TestCase(5, 10)]
         public void BluePosition_ShouldReturnCorrectValueAfterConstruction(int blueX, int blueY)
@@ -82,6 +86,37 @@ namespace TronBotFramework.UnitTests
 
             // Assert
             Assert.That(redPosition, Is.EqualTo((redX, redY)));
+        }
+
+        [TestCase(Color.Blue, true, true, true, true, new[] {Move.Up, Move.Down, Move.Left, Move.Right})]
+        [TestCase(Color.Red, true, true, true, true, new[] {Move.Up, Move.Down, Move.Left, Move.Right})]
+        [TestCase(Color.Blue, false, true, true, true, new[] {Move.Down, Move.Left, Move.Right})]
+        [TestCase(Color.Red, false, true, true, true, new[] {Move.Down, Move.Left, Move.Right})]
+        [TestCase(Color.Blue, true, false, true, true, new[] {Move.Up, Move.Left, Move.Right})]
+        [TestCase(Color.Red, true, false, true, true, new[] {Move.Up, Move.Left, Move.Right})]
+        [TestCase(Color.Blue, true, true, false, true, new[] {Move.Up, Move.Down, Move.Right})]
+        [TestCase(Color.Red, true, true, false, true, new[] {Move.Up, Move.Down, Move.Right})]
+        [TestCase(Color.Blue, true, true, true, false, new[] {Move.Up, Move.Down, Move.Left})]
+        [TestCase(Color.Red, true, true, true, false, new[] {Move.Up, Move.Down, Move.Left})]
+        [TestCase(Color.Blue, false, false, false, false, new Move[0])]
+        [TestCase(Color.Red, false, false, false, false, new Move[0])]
+        public void GetAvailableMoves_ShouldReturnMovesForFieldsThatAreEmpty(
+            Color color, bool upIsEmpty, bool downIsEmpty, bool leftIsEmpty, bool rightIsEmpty, Move[] expectedMoves)
+        {
+            // Arrange
+            var board = color == Color.Blue ? GetValidBoard(bluePosition: (5, 10)) : GetValidBoard(redPosition: (5, 10));
+            board.SetField(5, 9, upIsEmpty ? Field.Empty : Field.Obstacle);
+            board.SetField(5, 11, downIsEmpty ? Field.Empty : Field.Obstacle);
+            board.SetField(4, 10, leftIsEmpty ? Field.Empty : Field.Obstacle);
+            board.SetField(6, 10, rightIsEmpty ? Field.Empty : Field.Obstacle);
+
+            var competition = new Competition(board);
+
+            // Act
+            var availableMoves = competition.GetAvailableMoves(color);
+
+            // Assert
+            Assert.That(availableMoves, Is.EquivalentTo(expectedMoves));
         }
 
         private static Board GetValidBoard((int X, int Y)? bluePosition = null, (int X, int Y)? redPosition = null)
