@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace TronBotFramework.UnitTests
 {
@@ -34,7 +35,7 @@ namespace TronBotFramework.UnitTests
         {
             // Arrange
             var board = GetValidBoard();
-            board.SetField(8, 8, Field.Empty);
+            board.SetField(8, 18, Field.Empty);
 
             // Act
             // Assert
@@ -119,6 +120,84 @@ namespace TronBotFramework.UnitTests
             Assert.That(availableMoves, Is.EquivalentTo(expectedMoves));
         }
 
+        [Test]
+        public void GetField_ShouldReturnFieldFromTheBoard()
+        {
+            // Arrange
+            var board = GetValidBoard();
+            var competition = new Competition(board);
+
+            // Act
+            // Assert
+            for (var x = 0; x < 10; x++)
+            {
+                for (var y = 0; y < 20; y++)
+                {
+                    Assert.That(competition.GetField(x, y), Is.EqualTo(board.GetField(x, y)));
+                }
+            }
+        }
+
+        [TestCase(Color.Blue, Move.Up, 5, 9)]
+        [TestCase(Color.Red, Move.Up, 5, 9)]
+        [TestCase(Color.Blue, Move.Down, 5, 11)]
+        [TestCase(Color.Red, Move.Down, 5, 11)]
+        [TestCase(Color.Blue, Move.Left, 4, 10)]
+        [TestCase(Color.Red, Move.Left, 4, 10)]
+        [TestCase(Color.Blue, Move.Right, 6, 10)]
+        [TestCase(Color.Red, Move.Right, 6, 10)]
+        public void MakeMove_ShouldMoveBotHeadAndLeaveTrailOfBotTail(Color color, Move move, int expectedPositionX, int expectedPositionY)
+        {
+            // Arrange
+            var initialPosition = (X: 5, Y: 10);
+            var board = color switch
+            {
+                Color.Blue => GetValidBoard(bluePosition: initialPosition),
+                Color.Red => GetValidBoard(redPosition: initialPosition),
+                _ => throw new ArgumentOutOfRangeException(nameof(color), color, "Incorrect color provided.")
+            };
+            var competition = new Competition(board);
+
+            // Act
+            competition.MakeMove(color, move);
+
+            // Assert
+            (int X, int Y) headPosition;
+            Field expectedHeadField;
+            Field expectedTailField;
+            switch (color)
+            {
+                case Color.Blue:
+                    headPosition = competition.BluePosition;
+                    expectedHeadField = Field.BlueHead;
+                    expectedTailField = Field.BlueTail;
+                    break;
+                case Color.Red:
+                    headPosition = competition.RedPosition;
+                    expectedHeadField = Field.RedHead;
+                    expectedTailField = Field.RedTail;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(color), color, "Incorrect color provided.");
+            }
+
+            Assert.That(headPosition, Is.EqualTo((expectedPositionX, expectedPositionY)));
+            Assert.That(competition.GetField(expectedPositionX, expectedPositionY), Is.EqualTo(expectedHeadField));
+            Assert.That(competition.GetField(initialPosition.X, initialPosition.Y), Is.EqualTo(expectedTailField));
+        }
+
+        [Test]
+        public void MakeMove_ShouldThrowException_GivenUnavailableMove()
+        {
+            // Arrange
+            var board = GetValidBoard();
+            var competition = new Competition(board);
+
+            // Act
+            // Assert
+            Assert.That(() => competition.MakeMove(Color.Blue, Move.Up), Throws.ArgumentException);
+        }
+
         private static Board GetValidBoard((int X, int Y)? bluePosition = null, (int X, int Y)? redPosition = null)
         {
             var board = new Board(10, 20);
@@ -127,12 +206,19 @@ namespace TronBotFramework.UnitTests
             {
                 for (var y = 0; y < 20; y++)
                 {
-                    board.SetField(x, y, Field.Obstacle);
+                    if (x > 0 && x < 9 && y > 0 && y < 19)
+                    {
+                        board.SetField(x, y, Field.Empty);
+                    }
+                    else
+                    {
+                        board.SetField(x, y, Field.Obstacle);
+                    }
                 }
             }
 
             board.SetField(bluePosition?.X ?? 1, bluePosition?.Y ?? 1, Field.BlueHead);
-            board.SetField(redPosition?.X ?? 8, redPosition?.Y ?? 8, Field.RedHead);
+            board.SetField(redPosition?.X ?? 8, redPosition?.Y ?? 18, Field.RedHead);
 
             return board;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TronBotFramework
 {
@@ -26,6 +27,40 @@ namespace TronBotFramework
             if (GetFieldBasedOnMove(color, Move.Right) == Field.Empty) moves.Add(Move.Right);
 
             return moves.AsReadOnly();
+        }
+
+        public Field GetField(int x, int y) => _board.GetField(x, y);
+
+        public void MakeMove(Color color, Move move)
+        {
+            if (GetAvailableMoves(color).Contains(move) == false)
+            {
+                throw new ArgumentException($"Move {move} is not available at current state for {color}.", nameof(move));
+            }
+
+            (int X, int Y) position;
+            Field tail;
+            Field head;
+            switch (color)
+            {
+                case Color.Blue:
+                    position = BluePosition;
+                    tail = Field.BlueTail;
+                    head = Field.BlueHead;
+                    break;
+                case Color.Red:
+                    position = RedPosition;
+                    tail = Field.RedTail;
+                    head = Field.RedHead;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(color), color, "Incorrect color provided.");
+            }
+
+            var (x, y) = Transform(position, move);
+
+            _board.SetField(position.X, position.Y, tail);
+            _board.SetField(x, y, head);
         }
 
         private static void ValidateBoard(Board board)
@@ -105,15 +140,18 @@ namespace TronBotFramework
 
         private Field GetFieldBasedOnMove(Color color, Move move)
         {
-            var (x, y) = GetPositionOfHead(color);
-            return move switch
-            {
-                Move.Up => _board.GetField(x, y - 1),
-                Move.Down => _board.GetField(x, y + 1),
-                Move.Left => _board.GetField(x - 1, y),
-                Move.Right => _board.GetField(x + 1, y),
-                _ => throw new ArgumentOutOfRangeException(nameof(move), move, "Incorrect move provided.")
-            };
+            var position = GetPositionOfHead(color);
+            var (x, y) = Transform(position, move);
+            return _board.GetField(x, y);
         }
+
+        private (int X, int Y) Transform((int X, int Y) position, Move move) => move switch
+        {
+            Move.Up => (position.X, position.Y - 1),
+            Move.Down => (position.X, position.Y + 1),
+            Move.Left => (position.X - 1, position.Y),
+            Move.Right => (position.X + 1, position.Y),
+            _ => throw new ArgumentOutOfRangeException(nameof(move), move, "Incorrect move provided.")
+        };
     }
 }
