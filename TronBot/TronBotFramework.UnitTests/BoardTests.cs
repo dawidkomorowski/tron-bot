@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace TronBotFramework.UnitTests
 {
+    [TestFixture]
     public class BoardTests
     {
         [TestCase(0, 1)]
@@ -93,6 +94,39 @@ namespace TronBotFramework.UnitTests
                     // Assert
                     var field = board.GetField(x, y);
                     Assert.That(field, Is.EqualTo(expectedField));
+                }
+            }
+        }
+
+        [Test]
+        public void Clone_ShouldCreateCopyOfBoard()
+        {
+            // Arrange
+            var originBoard = new Board(10, 20);
+
+            for (var x = 0; x < originBoard.Width; x++)
+            {
+                for (var y = 0; y < originBoard.Height; y++)
+                {
+                    var expectedField = GetRandomField();
+                    originBoard.SetField(x, y, expectedField);
+                }
+            }
+
+            // Act
+            var cloneBoard = originBoard.Clone();
+
+            // Assert
+            Assert.That(cloneBoard.Width, Is.EqualTo(originBoard.Width));
+            Assert.That(cloneBoard.Height, Is.EqualTo(originBoard.Height));
+
+            for (var x = 0; x < originBoard.Width; x++)
+            {
+                for (var y = 0; y < originBoard.Height; y++)
+                {
+                    var expectedField = originBoard.GetField(x, y);
+                    var actualField = cloneBoard.GetField(x, y);
+                    Assert.That(actualField, Is.EqualTo(expectedField));
                 }
             }
         }

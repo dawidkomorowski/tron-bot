@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace TronBotFramework.UnitTests
 {
+    [TestFixture]
     public class CompetitionTests
     {
         #region Constructor tests
