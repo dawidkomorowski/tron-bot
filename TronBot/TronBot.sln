@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TronBotFramework", "TronBot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TronBotFramework.UnitTests", "TronBotFramework.UnitTests\TronBotFramework.UnitTests.csproj", "{951ECACE-2608-450D-A4F3-80B6DE8D027F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandBot", "RandBot\RandBot.csproj", "{B84EC8A3-14FD-4F35-842A-563B411AD157}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{951ECACE-2608-450D-A4F3-80B6DE8D027F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{951ECACE-2608-450D-A4F3-80B6DE8D027F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{951ECACE-2608-450D-A4F3-80B6DE8D027F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B84EC8A3-14FD-4F35-842A-563B411AD157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B84EC8A3-14FD-4F35-842A-563B411AD157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B84EC8A3-14FD-4F35-842A-563B411AD157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B84EC8A3-14FD-4F35-842A-563B411AD157}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
