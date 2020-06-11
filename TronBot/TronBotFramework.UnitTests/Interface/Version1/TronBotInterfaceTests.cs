@@ -7,8 +7,8 @@ namespace TronBotFramework.UnitTests.Interface.Version1
     [TestFixture]
     public class TronBotInterfaceTests
     {
-        private IBot _bot;
-        private IInterface _interface;
+        private IBot _bot = null!;
+        private IInterface _interface = null!;
 
         [SetUp]
         public void SetUp()
