@@ -63,20 +63,6 @@ namespace TronBotFramework.UnitTests
             Assert.That(() => board.GetField(x, y), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
-        [TestCase(-1, 0)]
-        [TestCase(10, 0)]
-        [TestCase(0, -1)]
-        [TestCase(0, 20)]
-        public void SetField_ShouldThrowException_GivenCoordinatesOutOfRange(int x, int y)
-        {
-            // Arrange
-            var board = new Board(10, 20);
-
-            // Act
-            // Assert
-            Assert.That(() => board.SetField(x, y, Field.Empty), Throws.TypeOf<ArgumentOutOfRangeException>());
-        }
-
         [Test]
         public void GetField_ShouldReturnFieldThatWasSetWith_SetField()
         {
@@ -96,6 +82,20 @@ namespace TronBotFramework.UnitTests
                     Assert.That(field, Is.EqualTo(expectedField));
                 }
             }
+        }
+
+        [TestCase(-1, 0)]
+        [TestCase(10, 0)]
+        [TestCase(0, -1)]
+        [TestCase(0, 20)]
+        public void SetField_ShouldThrowException_GivenCoordinatesOutOfRange(int x, int y)
+        {
+            // Arrange
+            var board = new Board(10, 20);
+
+            // Act
+            // Assert
+            Assert.That(() => board.SetField(x, y, Field.Empty), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -129,6 +129,64 @@ namespace TronBotFramework.UnitTests
                     Assert.That(actualField, Is.EqualTo(expectedField));
                 }
             }
+        }
+
+        [Test]
+        public void IsEquivalentTo_ShouldReturnTrue_WhenTwoBoardsAreOfTheSameSizeWithAllCorrespondingFieldsEqual()
+        {
+            // Arrange
+            var board1 = new Board(10, 20);
+            var board2 = new Board(10, 20);
+
+            // Act
+            var actual = board1.IsEquivalentTo(board2);
+
+            // Assert
+            Assert.That(actual, Is.True);
+        }
+
+        [Test]
+        public void IsEquivalentTo_ShouldReturnFalse_WhenTwoBoardsAreOfDifferentWidth()
+        {
+            // Arrange
+            var board1 = new Board(10, 20);
+            var board2 = new Board(20, 20);
+
+            // Act
+            var actual = board1.IsEquivalentTo(board2);
+
+            // Assert
+            Assert.That(actual, Is.False);
+        }
+
+        [Test]
+        public void IsEquivalentTo_ShouldReturnFalse_WhenTwoBoardsAreOfDifferentHeight()
+        {
+            // Arrange
+            var board1 = new Board(10, 20);
+            var board2 = new Board(10, 10);
+
+            // Act
+            var actual = board1.IsEquivalentTo(board2);
+
+            // Assert
+            Assert.That(actual, Is.False);
+        }
+
+        [Test]
+        public void IsEquivalentTo_ShouldReturnFalse_WhenTwoBoardsHaveDifferentFields()
+        {
+            // Arrange
+            var board1 = new Board(10, 20);
+            var board2 = new Board(10, 20);
+            board1.SetField(5, 10, Field.BlueHead);
+            board2.SetField(5, 10, Field.RedHead);
+
+            // Act
+            var actual = board1.IsEquivalentTo(board2);
+
+            // Assert
+            Assert.That(actual, Is.False);
         }
 
         [Test]

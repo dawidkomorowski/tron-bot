@@ -51,6 +51,19 @@ namespace TronBotFramework
             return clone;
         }
 
+        public bool IsEquivalentTo(Board other)
+        {
+            if (Width != other.Width) return false;
+            if (Height != other.Height) return false;
+
+            for (var i = 0; i < _board.Length; i++)
+            {
+                if (_board[i] != other._board[i]) return false;
+            }
+
+            return true;
+        }
+
         public IEnumerator<Field> GetEnumerator()
         {
             return _board.AsEnumerable().GetEnumerator();
