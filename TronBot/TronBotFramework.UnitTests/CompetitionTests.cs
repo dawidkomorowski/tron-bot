@@ -199,6 +199,125 @@ namespace TronBotFramework.UnitTests
             Assert.That(() => competition.MakeMove(Color.Blue, Move.Up), Throws.ArgumentException);
         }
 
+        [TestCase(Color.Blue, Move.Up, 5, 11)]
+        [TestCase(Color.Red, Move.Up, 5, 11)]
+        [TestCase(Color.Blue, Move.Down, 5, 9)]
+        [TestCase(Color.Red, Move.Down, 5, 9)]
+        [TestCase(Color.Blue, Move.Left, 6, 10)]
+        [TestCase(Color.Red, Move.Left, 6, 10)]
+        [TestCase(Color.Blue, Move.Right, 4, 10)]
+        [TestCase(Color.Red, Move.Right, 4, 10)]
+        public void RevertMove_ShouldMoveBotHeadBackOnTrailOfBotTailAndMakeFieldEmpty(Color color, Move move, int expectedPositionX, int expectedPositionY)
+        {
+            // Arrange
+            var initialPosition = (X: 5, Y: 10);
+            var (board, tail) = color switch
+            {
+                Color.Blue => (GetValidBoard(bluePosition: initialPosition), Field.BlueTail),
+                Color.Red => (GetValidBoard(redPosition: initialPosition), Field.RedTail),
+                _ => throw new ArgumentOutOfRangeException(nameof(color), color, "Incorrect color provided.")
+            };
+            board.SetField(expectedPositionX, expectedPositionY, tail);
+
+            var competition = new Competition(board);
+
+            // Act
+            competition.RevertMove(color, move);
+
+            // Assert
+            (int X, int Y) headPosition;
+            Field expectedHeadField;
+            switch (color)
+            {
+                case Color.Blue:
+                    headPosition = competition.BluePosition;
+                    expectedHeadField = Field.BlueHead;
+                    break;
+                case Color.Red:
+                    headPosition = competition.RedPosition;
+                    expectedHeadField = Field.RedHead;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(color), color, "Incorrect color provided.");
+            }
+
+            Assert.That(headPosition, Is.EqualTo((expectedPositionX, expectedPositionY)));
+            Assert.That(competition.GetField(expectedPositionX, expectedPositionY), Is.EqualTo(expectedHeadField));
+            Assert.That(competition.GetField(initialPosition.X, initialPosition.Y), Is.EqualTo(Field.Empty));
+        }
+
+        [TestCase(Color.Blue, Field.Empty)]
+        [TestCase(Color.Red, Field.Empty)]
+        [TestCase(Color.Blue, Field.Obstacle)]
+        [TestCase(Color.Red, Field.Obstacle)]
+        [TestCase(Color.Blue, Field.RedTail)]
+        [TestCase(Color.Red, Field.BlueTail)]
+        public void RevertMove_ShouldThrowException_GivenIncorrectMove(Color color, Field field)
+        {
+            // Arrange
+            var initialPosition = (X: 5, Y: 10);
+            var (board, tail) = color switch
+            {
+                Color.Blue => (GetValidBoard(bluePosition: initialPosition), Field.BlueTail),
+                Color.Red => (GetValidBoard(redPosition: initialPosition), Field.RedTail),
+                _ => throw new ArgumentOutOfRangeException(nameof(color), color, "Incorrect color provided.")
+            };
+            board.SetField(5, 11, field);
+
+            var competition = new Competition(board);
+
+            // Act
+            // Assert
+            Assert.That(() => competition.RevertMove(color, Move.Up), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void RevertMove_ShouldThrowException_GivenIncorrectMove_Blue_RedHead()
+        {
+            // Arrange
+            var board = GetValidBoard(bluePosition: (5, 10), redPosition: (5, 11));
+            var competition = new Competition(board);
+
+            // Act
+            // Assert
+            Assert.That(() => competition.RevertMove(Color.Blue, Move.Up), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void RevertMove_ShouldThrowException_GivenIncorrectMove_Red_BlueHead()
+        {
+            // Arrange
+            var board = GetValidBoard(bluePosition: (5, 11), redPosition: (5, 10));
+            var competition = new Competition(board);
+
+            // Act
+            // Assert
+            Assert.That(() => competition.RevertMove(Color.Red, Move.Up), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void RevertMove_ShouldRestoreInitialBoardState_WhenExecutedForEachMakeMove()
+        {
+            // Arrange
+            var initialBoard = GetValidBoard();
+            var board = initialBoard.Clone();
+            var competition = new Competition(board);
+
+            // Act
+            competition.MakeMove(Color.Blue, Move.Down);
+            competition.MakeMove(Color.Red, Move.Up);
+            competition.MakeMove(Color.Blue, Move.Right);
+            competition.MakeMove(Color.Red, Move.Left);
+
+            competition.RevertMove(Color.Red, Move.Left);
+            competition.RevertMove(Color.Blue, Move.Right);
+            competition.RevertMove(Color.Red, Move.Up);
+            competition.RevertMove(Color.Blue, Move.Down);
+
+            // Assert
+            Assert.That(board.IsEquivalentTo(initialBoard), Is.True);
+        }
+
         private static Board GetValidBoard((int X, int Y)? bluePosition = null, (int X, int Y)? redPosition = null)
         {
             var board = new Board(10, 20);

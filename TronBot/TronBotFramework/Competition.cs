@@ -63,6 +63,40 @@ namespace TronBotFramework
             _board.SetField(x, y, head);
         }
 
+        public void RevertMove(Color color, Move move)
+        {
+            var oppositeMove = Opposite(move);
+
+            (int X, int Y) position;
+            Field tail;
+            Field head;
+            switch (color)
+            {
+                case Color.Blue:
+                    position = BluePosition;
+                    tail = Field.BlueTail;
+                    head = Field.BlueHead;
+                    break;
+                case Color.Red:
+                    position = RedPosition;
+                    tail = Field.RedTail;
+                    head = Field.RedHead;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(color), color, "Incorrect color provided.");
+            }
+
+            var (x, y) = Transform(position, oppositeMove);
+
+            if (GetField(x, y) != tail)
+            {
+                throw new ArgumentException($"Move {move} is impossible to revert at current state for {color}.", nameof(move));
+            }
+
+            _board.SetField(position.X, position.Y, Field.Empty);
+            _board.SetField(x, y, head);
+        }
+
         private static void ValidateBoard(Board board)
         {
             var blueHeadCount = 0;
@@ -145,12 +179,21 @@ namespace TronBotFramework
             return _board.GetField(x, y);
         }
 
-        private (int X, int Y) Transform((int X, int Y) position, Move move) => move switch
+        private static (int X, int Y) Transform((int X, int Y) position, Move move) => move switch
         {
             Move.Up => (position.X, position.Y - 1),
             Move.Down => (position.X, position.Y + 1),
             Move.Left => (position.X - 1, position.Y),
             Move.Right => (position.X + 1, position.Y),
+            _ => throw new ArgumentOutOfRangeException(nameof(move), move, "Incorrect move provided.")
+        };
+
+        private static Move Opposite(Move move) => move switch
+        {
+            Move.Up => Move.Down,
+            Move.Down => Move.Up,
+            Move.Left => Move.Right,
+            Move.Right => Move.Left,
             _ => throw new ArgumentOutOfRangeException(nameof(move), move, "Incorrect move provided.")
         };
     }
