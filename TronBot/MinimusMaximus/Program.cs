@@ -1,9 +1,9 @@
 ﻿using TronBotFramework;
 using TronBotFramework.Interface.Version1;
 
-namespace RandBot
+namespace MinimusMaximus
 {
-    internal static class Program
+    internal class Program
     {
         private static void Main()
         {
