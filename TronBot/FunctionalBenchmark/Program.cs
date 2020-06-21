@@ -21,7 +21,7 @@ namespace FunctionalBenchmark
             var minimusMaximus = new MinimusMaximus.TronBot();
             var randBot = new RandBot.TronBot();
 
-            var statistics = Duel.RunMultiple(minimusMaximus, randBot, CreateDefaultBoard(), 10);
+            var statistics = Duel.RunMultipleParallel(minimusMaximus, randBot, CreateDefaultBoard(), 100);
             Console.WriteLine(statistics);
             Console.WriteLine();
         }
