@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TronBotFramework.UnitTests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandBot", "RandBot\RandBot.csproj", "{B84EC8A3-14FD-4F35-842A-563B411AD157}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimusMaximus", "MinimusMaximus\MinimusMaximus.csproj", "{B59B98CE-ADB2-46ED-8D80-A84E22BD6131}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimusMaximus", "MinimusMaximus\MinimusMaximus.csproj", "{B59B98CE-ADB2-46ED-8D80-A84E22BD6131}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparisonTests", "ComparisonTests\ComparisonTests.csproj", "{2E7B5F4F-00ED-4B44-B1A4-29190245B288}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalBenchmark", "FunctionalBenchmark\FunctionalBenchmark.csproj", "{661AE54E-47DF-4381-B83C-C49399C75975}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{B59B98CE-ADB2-46ED-8D80-A84E22BD6131}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B59B98CE-ADB2-46ED-8D80-A84E22BD6131}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B59B98CE-ADB2-46ED-8D80-A84E22BD6131}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E7B5F4F-00ED-4B44-B1A4-29190245B288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E7B5F4F-00ED-4B44-B1A4-29190245B288}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E7B5F4F-00ED-4B44-B1A4-29190245B288}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E7B5F4F-00ED-4B44-B1A4-29190245B288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{661AE54E-47DF-4381-B83C-C49399C75975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{661AE54E-47DF-4381-B83C-C49399C75975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{661AE54E-47DF-4381-B83C-C49399C75975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{661AE54E-47DF-4381-B83C-C49399C75975}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
