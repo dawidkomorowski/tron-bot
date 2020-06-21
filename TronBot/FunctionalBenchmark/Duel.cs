@@ -135,6 +135,7 @@ namespace FunctionalBenchmark
                 }
 
                 Interlocked.Increment(ref progress);
+                Console.Write($"Progress: {progress}/{numberOfRuns}\r");
             });
 
             Console.WriteLine($"Progress: {progress}/{numberOfRuns}");
