@@ -37,14 +37,14 @@ namespace MinimusMaximus
             {
                 if (color.IsMaximizing)
                 {
-                    if (move.Score > bestMove.Score)
+                    if (move.Score >= bestMove.Score)
                     {
                         bestMove = move;
                     }
                 }
                 else
                 {
-                    if (move.Score < bestMove.Score)
+                    if (move.Score <= bestMove.Score)
                     {
                         bestMove = move;
                     }
