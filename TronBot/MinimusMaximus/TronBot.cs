@@ -9,21 +9,21 @@ namespace MinimusMaximus
         public Move FindMove(Board board, Color color)
         {
             var competition = new Competition(board);
-            var bestMove = MiniMax(competition, new MiniMaxColor(color, color),12);
+            var bestMove = MiniMax(competition, new MiniMaxColor(color, color), 12);
             return bestMove.Move;
         }
 
         private static ScoredMove MiniMax(Competition competition, MiniMaxColor color, int depth)
         {
-            if (depth == 0)
+            var availableMoves = competition.GetAvailableMoves(color.Value);
+
+            if (depth == 0 || availableMoves.Count == 0)
             {
                 var score = Evaluate(competition, color);
                 return new ScoredMove(Move.Up, score);
             }
 
             var scoredMoves = new List<ScoredMove>();
-            var availableMoves = competition.GetAvailableMoves(color.Value);
-
             foreach (var move in availableMoves)
             {
                 competition.MakeMove(color.Value, move);
@@ -37,14 +37,14 @@ namespace MinimusMaximus
             {
                 if (color.IsMaximizing)
                 {
-                    if (move.Score >= bestMove.Score)
+                    if (move.Score > bestMove.Score)
                     {
                         bestMove = move;
                     }
                 }
                 else
                 {
-                    if (move.Score <= bestMove.Score)
+                    if (move.Score < bestMove.Score)
                     {
                         bestMove = move;
                     }
@@ -56,14 +56,18 @@ namespace MinimusMaximus
 
         private static int Evaluate(Competition competition, MiniMaxColor color)
         {
-            var numberOfMyAvailableMoves = competition.GetAvailableMoves(color.Value).Count;
-            var numberOfOpponentAvailableMoves = competition.GetAvailableMoves(color.Opposite().Value).Count;
-            var myScore = numberOfMyAvailableMoves > 0 ? numberOfMyAvailableMoves : -1000;
-            var opponentScore = numberOfOpponentAvailableMoves > 0 ? numberOfMyAvailableMoves : -1000;
+            var myScore = GetScoreForColor(competition, color.Value);
+            var opponentScore = GetScoreForColor(competition, color.Opposite().Value);
 
             var score = myScore - opponentScore;
 
             return color.IsMaximizing ? score : -score;
+        }
+
+        private static int GetScoreForColor(Competition competition, Color color)
+        {
+            var numberOfAvailableMoves = competition.GetAvailableMoves(color).Count;
+            return numberOfAvailableMoves > 0 ? numberOfAvailableMoves : -1000;
         }
 
         private static ScoredMove GetInfinityMove(bool isMaximizing) =>

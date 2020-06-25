@@ -10,7 +10,6 @@ namespace FunctionalBenchmark
             MinimusMaximus_Vs_RandBot();
         }
 
-
         private static void MinimusMaximus_Vs_RandBot()
         {
             Console.WriteLine("MinimusMaximus vs RandBot:");
