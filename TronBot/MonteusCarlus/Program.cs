@@ -1,7 +1,7 @@
 ﻿using TronBotFramework;
 using TronBotFramework.Interface.Version1;
 
-namespace MinimusMaximus
+namespace MonteusCarlus
 {
     internal static class Program
     {

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MinimusMaximus\MinimusMaximus.csproj" />
+    <ProjectReference Include="..\MonteusCarlus\MonteusCarlus.csproj" />
     <ProjectReference Include="..\RandBot\RandBot.csproj" />
     <ProjectReference Include="..\TronBotFramework\TronBotFramework.csproj" />
   </ItemGroup>

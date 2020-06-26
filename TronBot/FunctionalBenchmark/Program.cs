@@ -7,7 +7,8 @@ namespace FunctionalBenchmark
     {
         private static void Main()
         {
-            MinimusMaximus_Vs_RandBot();
+            // MinimusMaximus_Vs_RandBot();
+            MonteusCarlus_Vs_RandBot();
         }
 
         private static void MinimusMaximus_Vs_RandBot()
@@ -21,6 +22,21 @@ namespace FunctionalBenchmark
             var randBot = new RandBot.TronBot();
 
             var statistics = Duel.RunMultipleParallel(minimusMaximus, randBot, CreateDefaultBoard(), 100);
+            Console.WriteLine(statistics);
+            Console.WriteLine();
+        }
+        
+        private static void MonteusCarlus_Vs_RandBot()
+        {
+            Console.WriteLine("MonteusCarlus vs RandBot:");
+            Console.WriteLine($"  MonteusCarlus - Blue");
+            Console.WriteLine($"  RandBot - Red");
+            Console.WriteLine();
+
+            var monteusCarlus = new MonteusCarlus.TronBot();
+            var randBot = new RandBot.TronBot();
+
+            var statistics = Duel.RunMultipleParallel(monteusCarlus, randBot, CreateDefaultBoard(), 100);
             Console.WriteLine(statistics);
             Console.WriteLine();
         }
