@@ -12,10 +12,13 @@ namespace TronBotFramework
         {
             ValidateBoard(board);
             _board = board;
+
+            BluePosition = GetInitialPositionOfHead(Color.Blue);
+            RedPosition = GetInitialPositionOfHead(Color.Red);
         }
 
-        public (int X, int Y) BluePosition => GetPositionOfHead(Color.Blue);
-        public (int X, int Y) RedPosition => GetPositionOfHead(Color.Red);
+        public (int X, int Y) BluePosition { get; private set; }
+        public (int X, int Y) RedPosition { get; private set; }
 
         public IReadOnlyCollection<Move> GetAvailableMoves(Color color)
         {
@@ -35,7 +38,8 @@ namespace TronBotFramework
         {
             if (GetAvailableMoves(color).Contains(move) == false)
             {
-                throw new ArgumentException($"Move {move} is not available at current state for {color}.", nameof(move));
+                throw new ArgumentException($"Move {move} is not available at current state for {color}.",
+                    nameof(move));
             }
 
             (int X, int Y) position;
@@ -61,6 +65,7 @@ namespace TronBotFramework
 
             _board.SetField(position.X, position.Y, tail);
             _board.SetField(x, y, head);
+            SetPositionOfHead(color, x, y);
         }
 
         public void RevertMove(Color color, Move move)
@@ -90,11 +95,13 @@ namespace TronBotFramework
 
             if (GetField(x, y) != tail)
             {
-                throw new ArgumentException($"Move {move} is impossible to revert at current state for {color}.", nameof(move));
+                throw new ArgumentException($"Move {move} is impossible to revert at current state for {color}.",
+                    nameof(move));
             }
 
             _board.SetField(position.X, position.Y, Field.Empty);
             _board.SetField(x, y, head);
+            SetPositionOfHead(color, x, y);
         }
 
         private static void ValidateBoard(Board board)
@@ -125,10 +132,12 @@ namespace TronBotFramework
             }
 
             if (blueHeadCount != 1)
-                throw new ArgumentException($"{nameof(Board)} should contain exactly one field of type {nameof(Field.BlueHead)}.",
+                throw new ArgumentException(
+                    $"{nameof(Board)} should contain exactly one field of type {nameof(Field.BlueHead)}.",
                     nameof(board));
             if (redHeadCount != 1)
-                throw new ArgumentException($"{nameof(Board)} should contain exactly one field of type {nameof(Field.RedHead)}.",
+                throw new ArgumentException(
+                    $"{nameof(Board)} should contain exactly one field of type {nameof(Field.RedHead)}.",
                     nameof(board));
 
             var xMax = board.Width - 1;
@@ -140,9 +149,11 @@ namespace TronBotFramework
                 var bottomBorderField = board.GetField(x, yMax);
 
                 if (topBorderField != Field.Obstacle)
-                    throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: ({x}, 0).", nameof(board));
+                    throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: ({x}, 0).",
+                        nameof(board));
                 if (bottomBorderField != Field.Obstacle)
-                    throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: ({x}, {yMax}).", nameof(board));
+                    throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: ({x}, {yMax}).",
+                        nameof(board));
             }
 
             for (var y = 0; y < board.Height; y++)
@@ -151,13 +162,15 @@ namespace TronBotFramework
                 var rightBorderField = board.GetField(xMax, y);
 
                 if (leftBorderField != Field.Obstacle)
-                    throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: (0, {y}).", nameof(board));
+                    throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: (0, {y}).",
+                        nameof(board));
                 if (rightBorderField != Field.Obstacle)
-                    throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: ({xMax}, {y}).", nameof(board));
+                    throw new ArgumentException($"{nameof(Board)} is missing an obstacle on position: ({xMax}, {y}).",
+                        nameof(board));
             }
         }
 
-        private (int X, int Y) GetPositionOfHead(Color color)
+        private (int X, int Y) GetInitialPositionOfHead(Color color)
         {
             for (var x = 0; x < _board.Width; x++)
             {
@@ -170,6 +183,28 @@ namespace TronBotFramework
             }
 
             throw new InvalidOperationException("Head position not found.");
+        }
+
+        private (int X, int Y) GetPositionOfHead(Color color) => color switch
+        {
+            Color.Blue => BluePosition,
+            Color.Red => RedPosition,
+            _ => throw new ArgumentOutOfRangeException(nameof(color), "Invalid color.")
+        };
+
+        private void SetPositionOfHead(Color color, int x, int y)
+        {
+            switch (color)
+            {
+                case Color.Blue:
+                    BluePosition = (x, y);
+                    break;
+                case Color.Red:
+                    RedPosition = (x, y);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(color), color, null);
+            }
         }
 
         private Field GetFieldBasedOnMove(Color color, Move move)
