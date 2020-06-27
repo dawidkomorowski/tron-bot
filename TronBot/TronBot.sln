@@ -17,6 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonteusCarlus", "MonteusCar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceBenchmark", "PerformanceBenchmark\PerformanceBenchmark.csproj", "{9C200588-3759-4EAB-A5D7-2A745DA1967A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{AF9BD502-FAEE-405A-8532-FE21B3740E59}"
+ProjectSection(SolutionItems) = preProject
+	Scripts\make-executable.sh = Scripts\make-executable.sh
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -6,10 +6,12 @@ namespace MinimusMaximus
 {
     public sealed class TronBot : IBot
     {
+        private const int MaxDepth = 14;
+
         public Move FindMove(Board board, Color color)
         {
             var competition = new Competition(board);
-            var bestMove = MiniMax(competition, new MiniMaxColor(color, color), 12);
+            var bestMove = MiniMax(competition, new MiniMaxColor(color, color), MaxDepth);
             return bestMove.Move;
         }
 

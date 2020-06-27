@@ -5,7 +5,7 @@ namespace MonteusCarlus
 {
     public sealed class TronBot : IBot
     {
-        private const int PlayOutsPerMove = 200;
+        private const int PlayOutsPerMove = 1000;
 
         public Move FindMove(Board board, Color color)
         {
